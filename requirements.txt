@@ -1,0 +1,13 @@
+# Python Requirements for n8n Avatar Video Automation
+# Python 3.8+ required
+
+# Pour des fonctionnalités avancées (optionnel)
+# requests>=2.31.0  # Pour des appels API supplémentaires
+# python-dotenv>=1.0.0  # Pour charger le fichier .env en Python
+# Pillow>=10.0.0  # Pour manipuler les images d'avatars
+# opencv-python>=4.8.0  # Pour du traitement vidéo avancé
+
+# Note: FFmpeg doit être installé au niveau système
+# Ubuntu/Debian: sudo apt install ffmpeg
+# macOS: brew install ffmpeg
+# Windows: choco install ffmpeg

@@ -1,0 +1,44 @@
+{
+  "name": "n8n-avatar-video-automation",
+  "version": "1.0.0",
+  "description": "Automatisation n8n pour générer des vidéos avec avatars IA et les publier sur TikTok, Instagram et YouTube",
+  "main": "index.js",
+  "scripts": {
+    "start": "n8n start",
+    "dev": "n8n start --tunnel",
+    "import": "n8n import:workflow --input=workflow-avatar-video-automation.json",
+    "export": "n8n export:workflow --output=./workflows --all",
+    "compile-video": "python3 video_compiler.py",
+    "compile-with-transitions": "python3 video_compiler.py --transitions --cleanup",
+    "test-ffmpeg": "ffmpeg -version && python3 video_compiler.py --help"
+  },
+  "keywords": [
+    "n8n",
+    "automation",
+    "ai",
+    "avatar",
+    "video",
+    "tiktok",
+    "instagram",
+    "youtube",
+    "content-creation"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "n8n": "^1.0.0"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/n8n-avatar-video-automation.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/n8n-avatar-video-automation/issues"
+  },
+  "homepage": "https://github.com/yourusername/n8n-avatar-video-automation#readme"
+}

@@ -1,0 +1,670 @@
+{
+  "name": "Avatar Video Automation - Multi-Platform",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * *"
+            }
+          ]
+        }
+      },
+      "id": "trigger-schedule",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://api.heygen.com/v1/avatar.create",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Api-Key",
+              "value": "={{$env.HEYGEN_API_KEY}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "avatar_name",
+              "value": "={{$json.avatar_name || 'AI_Avatar_' + $now.format('YYYYMMDDHHmmss')}}"
+            },
+            {
+              "name": "gender",
+              "value": "={{$json.gender || 'female'}}"
+            },
+            {
+              "name": "age_range",
+              "value": "={{$json.age_range || '25-35'}}"
+            },
+            {
+              "name": "style",
+              "value": "={{$json.style || 'professional'}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "generate-avatar",
+      "name": "Generate AI Avatar",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [450, 300],
+      "notes": "Génère un avatar IA via HeyGen API"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "avatar_id",
+              "name": "avatar_id",
+              "value": "={{$json.data.avatar_id}}",
+              "type": "string"
+            },
+            {
+              "id": "avatar_url",
+              "name": "avatar_url",
+              "value": "={{$json.data.avatar_url}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "extract-avatar-data",
+      "name": "Extract Avatar Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{JSON.stringify([\n  {\"segment\": 1, \"script\": $json.script_segment_1},\n  {\"segment\": 2, \"script\": $json.script_segment_2},\n  {\"segment\": 3, \"script\": $json.script_segment_3},\n  {\"segment\": 4, \"script\": $json.script_segment_4},\n  {\"segment\": 5, \"script\": $json.script_segment_5},\n  {\"segment\": 6, \"script\": $json.script_segment_6},\n  {\"segment\": 7, \"script\": $json.script_segment_7},\n  {\"segment\": 8, \"script\": $json.script_segment_8}\n])}}"
+      },
+      "id": "create-8-segments",
+      "name": "Create 8 Video Segments",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [850, 300],
+      "notes": "Crée 8 segments de vidéo de 8 secondes chacun"
+    },
+    {
+      "parameters": {
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$env.OPENAI_API_KEY}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"gpt-4\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Tu es un expert en création de scripts pour des vidéos courtes. Crée 8 segments de script, chacun devant durer exactement 8 secondes quand lu à voix haute. Chaque segment doit être engageant et se connecter naturellement au suivant pour former une histoire cohérente.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Sujet: {{$json.video_topic || 'Conseil du jour'}}. Crée 8 scripts de 8 secondes chacun.\"\n    }\n  ],\n  \"temperature\": 0.8\n}",
+        "options": {}
+      },
+      "id": "generate-scripts-gpt",
+      "name": "Generate Scripts with GPT-4",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [450, 500],
+      "notes": "Génère 8 scripts optimisés pour 8 secondes chacun"
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = $input.first().json;\nconst scripts = response.choices[0].message.content;\n\n// Parse les 8 segments du script\nconst segments = scripts.split(/Segment \\d+:/i).filter(s => s.trim());\n\nconst output = {\n  script_segment_1: segments[0]?.trim() || '',\n  script_segment_2: segments[1]?.trim() || '',\n  script_segment_3: segments[2]?.trim() || '',\n  script_segment_4: segments[3]?.trim() || '',\n  script_segment_5: segments[4]?.trim() || '',\n  script_segment_6: segments[5]?.trim() || '',\n  script_segment_7: segments[6]?.trim() || '',\n  script_segment_8: segments[7]?.trim() || ''\n};\n\nreturn output;"
+      },
+      "id": "parse-scripts",
+      "name": "Parse Scripts into Segments",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 500]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "id": "loop-segments",
+      "name": "Loop Through 8 Segments",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://api.d-id.com/talks",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Basic {{$env.DID_API_KEY}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"source_url\": \"{{$node['Extract Avatar Data'].json.avatar_url}}\",\n  \"script\": {\n    \"type\": \"text\",\n    \"input\": \"{{$json.script}}\",\n    \"provider\": {\n      \"type\": \"microsoft\",\n      \"voice_id\": \"{{$env.VOICE_ID || 'fr-FR-DeniseNeural'}}\"\n    }\n  },\n  \"config\": {\n    \"fluent\": true,\n    \"pad_audio\": 0,\n    \"driver_expressions\": {\n      \"expressions\": [\n        {\"start_frame\": 0, \"expression\": \"happy\", \"intensity\": 0.8}\n      ]\n    },\n    \"result_format\": \"mp4\"\n  }\n}",
+        "options": {}
+      },
+      "id": "generate-video-segment",
+      "name": "Generate Video Segment (D-ID)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1250, 300],
+      "notes": "Génère une vidéo de 8 secondes avec D-ID"
+    },
+    {
+      "parameters": {
+        "amount": 5,
+        "unit": "seconds"
+      },
+      "id": "wait-video-generation",
+      "name": "Wait for Video Generation",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [1450, 300],
+      "webhookId": "wait-video"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.d-id.com/talks/{{$json.id}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Basic {{$env.DID_API_KEY}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "check-video-status",
+      "name": "Check Video Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1650, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.status}}",
+              "operation": "equals",
+              "value2": "done"
+            }
+          ]
+        }
+      },
+      "id": "if-video-ready",
+      "name": "If Video Ready",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1850, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{$json.result_url}}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "download-video-segment",
+      "name": "Download Video Segment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [2050, 200]
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=segment_{{$json.segment}}.mp4",
+        "options": {}
+      },
+      "id": "save-video-segment",
+      "name": "Save Video Segment",
+      "type": "n8n-nodes-base.writeFile",
+      "typeVersion": 1,
+      "position": [2250, 200]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node['Loop Through 8 Segments'].context.noItemsLeft}}",
+              "operation": "equals",
+              "value2": "true"
+            }
+          ]
+        }
+      },
+      "id": "if-all-segments-done",
+      "name": "If All Segments Done",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [2450, 200]
+    },
+    {
+      "parameters": {
+        "command": "=cd /tmp && ffmpeg -f concat -safe 0 -i <(for i in {1..8}; do echo \"file 'segment_$i.mp4'\"; done) -c copy final_video.mp4"
+      },
+      "id": "compile-videos-ffmpeg",
+      "name": "Compile Videos with FFmpeg",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [2650, 100],
+      "notes": "Compile les 8 vidéos en une seule"
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "fileName": "/tmp/final_video.mp4",
+        "options": {}
+      },
+      "id": "read-final-video",
+      "name": "Read Final Video",
+      "type": "n8n-nodes-base.readFile",
+      "typeVersion": 1,
+      "position": [2850, 100]
+    },
+    {
+      "parameters": {
+        "url": "https://graph.facebook.com/v18.0/{{$env.INSTAGRAM_ACCOUNT_ID}}/media",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$env.INSTAGRAM_ACCESS_TOKEN}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "video_url",
+              "value": "={{$json.video_url}}"
+            },
+            {
+              "name": "caption",
+              "value": "={{$json.caption}}"
+            },
+            {
+              "name": "media_type",
+              "value": "REELS"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "upload-instagram",
+      "name": "Upload to Instagram",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [3050, 0]
+    },
+    {
+      "parameters": {
+        "url": "https://open.tiktokapis.com/v2/post/publish/video/init/",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$env.TIKTOK_ACCESS_TOKEN}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post_info\": {\n    \"title\": \"{{$json.caption}}\",\n    \"privacy_level\": \"PUBLIC_TO_EVERYONE\",\n    \"disable_duet\": false,\n    \"disable_comment\": false,\n    \"disable_stitch\": false,\n    \"video_cover_timestamp_ms\": 1000\n  },\n  \"source_info\": {\n    \"source\": \"FILE_UPLOAD\",\n    \"video_size\": {{$json.video_size}},\n    \"chunk_size\": 10000000,\n    \"total_chunk_count\": 1\n  }\n}",
+        "options": {}
+      },
+      "id": "upload-tiktok",
+      "name": "Upload to TikTok",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [3050, 100]
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "upload",
+        "title": "={{$json.caption}}",
+        "videoFile": "={{$json.video_binary}}",
+        "options": {
+          "description": "={{$json.description}}",
+          "tags": "={{$json.tags}}",
+          "categoryId": "22"
+        }
+      },
+      "id": "upload-youtube",
+      "name": "Upload to YouTube",
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [3050, 200],
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "youtube-credentials",
+          "name": "YouTube account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "success",
+              "name": "success",
+              "value": "true",
+              "type": "boolean"
+            },
+            {
+              "id": "message",
+              "name": "message",
+              "value": "Video uploaded to all platforms successfully",
+              "type": "string"
+            },
+            {
+              "id": "timestamp",
+              "name": "timestamp",
+              "value": "={{$now}}",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "id": "final-output",
+      "name": "Final Output",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [3250, 100]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Generate AI Avatar",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate Scripts with GPT-4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate AI Avatar": {
+      "main": [
+        [
+          {
+            "node": "Extract Avatar Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Avatar Data": {
+      "main": [
+        [
+          {
+            "node": "Create 8 Video Segments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Scripts with GPT-4": {
+      "main": [
+        [
+          {
+            "node": "Parse Scripts into Segments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Scripts into Segments": {
+      "main": [
+        [
+          {
+            "node": "Create 8 Video Segments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create 8 Video Segments": {
+      "main": [
+        [
+          {
+            "node": "Loop Through 8 Segments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Through 8 Segments": {
+      "main": [
+        [
+          {
+            "node": "Generate Video Segment (D-ID)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Video Segment (D-ID)": {
+      "main": [
+        [
+          {
+            "node": "Wait for Video Generation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Video Generation": {
+      "main": [
+        [
+          {
+            "node": "Check Video Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Video Status": {
+      "main": [
+        [
+          {
+            "node": "If Video Ready",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Video Ready": {
+      "main": [
+        [
+          {
+            "node": "Download Video Segment",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait for Video Generation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Video Segment": {
+      "main": [
+        [
+          {
+            "node": "Save Video Segment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Video Segment": {
+      "main": [
+        [
+          {
+            "node": "If All Segments Done",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If All Segments Done": {
+      "main": [
+        [
+          {
+            "node": "Compile Videos with FFmpeg",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Through 8 Segments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compile Videos with FFmpeg": {
+      "main": [
+        [
+          {
+            "node": "Read Final Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Final Video": {
+      "main": [
+        [
+          {
+            "node": "Upload to Instagram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Upload to TikTok",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Upload to YouTube",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload to Instagram": {
+      "main": [
+        [
+          {
+            "node": "Final Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload to TikTok": {
+      "main": [
+        [
+          {
+            "node": "Final Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload to YouTube": {
+      "main": [
+        [
+          {
+            "node": "Final Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-12-01T00:00:00.000Z",
+  "versionId": "1"
+}

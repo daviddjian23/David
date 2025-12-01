@@ -1,0 +1,69 @@
+# Fichiers de configuration sensibles
+.env
+*.env
+!.env.example
+
+# Fichiers de vidéos
+*.mp4
+*.mov
+*.avi
+*.webm
+/tmp/
+/video_segments/
+/final_videos/
+
+# n8n
+.n8n/
+*.db
+database.sqlite
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+
+# Logs
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Fichiers temporaires
+*.tmp
+*.temp
+concat_list.txt
+
+# Credentials et tokens
+credentials.json
+token.json
+refresh_token.json
+
+# Secrets
+*.key
+*.pem
+*.cert

@@ -1,0 +1,83 @@
+version: '3.8'
+
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n-avatar-automation
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      # Configuration n8n
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=${N8N_USER:-admin}
+      - N8N_BASIC_AUTH_PASSWORD=${N8N_PASSWORD:-changeme}
+      - N8N_HOST=${N8N_HOST:-localhost}
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - NODE_ENV=production
+      - WEBHOOK_URL=http://localhost:5678/
+      - GENERIC_TIMEZONE=${TIMEZONE:-Europe/Paris}
+
+      # Variables d'environnement pour le workflow
+      - HEYGEN_API_KEY=${HEYGEN_API_KEY}
+      - DID_API_KEY=${DID_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - VOICE_ID=${VOICE_ID:-fr-FR-DeniseNeural}
+      - INSTAGRAM_ACCOUNT_ID=${INSTAGRAM_ACCOUNT_ID}
+      - INSTAGRAM_ACCESS_TOKEN=${INSTAGRAM_ACCESS_TOKEN}
+      - TIKTOK_ACCESS_TOKEN=${TIKTOK_ACCESS_TOKEN}
+      - YOUTUBE_CLIENT_ID=${YOUTUBE_CLIENT_ID}
+      - YOUTUBE_CLIENT_SECRET=${YOUTUBE_CLIENT_SECRET}
+      - NUM_SEGMENTS=${NUM_SEGMENTS:-8}
+      - SEGMENT_DURATION=${SEGMENT_DURATION:-8}
+      - VIDEO_SEGMENTS_DIR=/data/video_segments
+      - FINAL_VIDEOS_DIR=/data/final_videos
+
+    volumes:
+      # Persister les données n8n
+      - n8n_data:/home/node/.n8n
+
+      # Workflows
+      - ./workflow-avatar-video-automation.json:/data/workflows/workflow-avatar-video-automation.json:ro
+
+      # Script de compilation vidéo
+      - ./video_compiler.py:/usr/local/bin/video_compiler.py:ro
+
+      # Répertoires de travail
+      - video_segments:/data/video_segments
+      - final_videos:/data/final_videos
+
+    networks:
+      - n8n-network
+
+    # Installer FFmpeg dans le conteneur
+    entrypoint: /bin/sh -c "apk add --no-cache ffmpeg python3 py3-pip && n8n start"
+
+  # Service optionnel : Base de données PostgreSQL pour n8n
+  # postgres:
+  #   image: postgres:15-alpine
+  #   container_name: n8n-postgres
+  #   restart: unless-stopped
+  #   environment:
+  #     - POSTGRES_USER=n8n
+  #     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-n8n}
+  #     - POSTGRES_DB=n8n
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   networks:
+  #     - n8n-network
+
+volumes:
+  n8n_data:
+    driver: local
+  video_segments:
+    driver: local
+  final_videos:
+    driver: local
+  # postgres_data:
+  #   driver: local
+
+networks:
+  n8n-network:
+    driver: bridge
