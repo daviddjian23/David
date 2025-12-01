@@ -125,6 +125,824 @@ Cette automatisation n8n permet de :
 - Activer YouTube Data API v3
 - Configurer OAuth 2.0
 
+## 📋 Workflow n8n - JSON Complet à Copier-Coller
+
+Voici le workflow n8n complet avec toutes les notes explicatives. **Copier-coller ce JSON directement dans n8n** :
+
+### 🚀 Comment Importer
+
+1. **Sélectionner tout le JSON ci-dessous** (Ctrl+A dans le bloc de code)
+2. **Copier** (Ctrl+C)
+3. **Ouvrir n8n**
+4. **Workflows** → **Import from File** → **Paste JSON**
+5. **Configurer les credentials** (voir section suivante)
+
+### 📝 JSON du Workflow
+
+<details>
+<summary><b>Cliquer pour voir le JSON complet (789 lignes)</b></summary>
+
+```json
+{
+  "name": "Avatar Video Automation - TikTok/Instagram/YouTube",
+  "nodes": [
+    {
+      "parameters": {
+        "height": 680,
+        "width": 800,
+        "content": "# 🎬 AUTOMATISATION VIDÉO AVEC AVATAR IA\n\n## 📋 DESCRIPTION DU WORKFLOW\nCe workflow automatise complètement la création de vidéos avec avatar IA :\n\n✅ **Génère un script viral** divisé en 8 parties de 8 secondes\n✅ **Crée un avatar IA** réaliste avec D-ID\n✅ **Génère 8 vidéos** de 8 secondes chacune (64s total)\n✅ **Compile automatiquement** toutes les vidéos en un seul fichier\n✅ **Publie simultanément** sur TikTok, Instagram et YouTube\n\n---\n\n## 🔑 API NÉCESSAIRES (OBLIGATOIRES)\n\n### 1️⃣ D-ID API (Génération d'avatars vidéo)\n**Pourquoi :** Crée des avatars IA qui parlent\n**Lien :** https://www.d-id.com/\n**Tarif :** Gratuit (20 crédits/mois) ou Payant ($5.9+/mois)\n**Inscription :** Créer un compte → Settings → API Keys\n\n### 2️⃣ OpenAI API (Génération de scripts)\n**Pourquoi :** Génère les scripts vidéo viraux\n**Lien :** https://platform.openai.com/\n**Tarif :** Pay-as-you-go (~$0.01-0.03 par script)\n**Inscription :** Créer un compte → API Keys → Create new key\n\n---\n\n## 📱 API RÉSEAUX SOCIAUX (OPTIONNELLES)\n\n### 3️⃣ TikTok for Developers\n**Lien :** https://developers.tiktok.com/\n**Inscription :** Créer une app → OAuth 2.0 → Obtenir access token\n\n### 4️⃣ Instagram Graph API\n**Lien :** https://developers.facebook.com/\n**Inscription :** Créer une app Facebook → Activer Instagram API\n\n### 5️⃣ YouTube Data API v3\n**Lien :** https://console.cloud.google.com/\n**Inscription :** Créer un projet → Activer YouTube API → OAuth 2.0\n\n---\n\n## ⚙️ CONFIGURATION REQUISE\n\n✔️ **FFmpeg** installé sur le serveur\n✔️ **Dossier temporaire** : /tmp/n8n-videos\n✔️ **Credentials** configurés dans n8n\n\n---\n\n## 🚀 DÉMARRAGE RAPIDE\n\n1. Configurer toutes les credentials dans n8n\n2. Modifier le sujet dans \"Schedule Trigger\"\n3. Cliquer sur \"Execute Workflow\"\n4. Attendre ~5-8 minutes\n5. Les vidéos seront publiées automatiquement !\n\n---\n\n## 💰 COÛT ESTIMÉ PAR VIDÉO\n\n- D-ID : ~$0.30-0.50 (8 générations)\n- OpenAI : ~$0.02-0.03 (script)\n- **Total : ~$0.35 par vidéo complète**\n\n---\n\n## ⏱️ TEMPS DE GÉNÉRATION\n\n- Script : ~10 secondes\n- Avatar initial : ~30 secondes\n- 8 vidéos : ~4-5 minutes\n- Compilation : ~10 secondes\n- Publication : ~30 secondes\n**Total : ~6-8 minutes par vidéo**"
+      },
+      "id": "main-info-note",
+      "name": "Note - Info Principale",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        -300
+      ]
+    },
+    {
+      "parameters": {
+        "height": 280,
+        "width": 380,
+        "content": "## 🎯 DÉCLENCHEUR\n\n**Ce qu'il fait :**\nDémarre le workflow automatiquement toutes les 24h\n\n**Configuration :**\n- Interval : 24 heures\n- Vous pouvez aussi le déclencher manuellement\n\n**Personnalisation :**\nAjoutez un input JSON pour personnaliser :\n```json\n{\n  \"topic\": \"5 astuces productivité\",\n  \"style\": \"éducatif\",\n  \"tone\": \"énergique\"\n}\n```\n\n**Alternative :**\nRemplacez par un Webhook pour déclencher depuis une API externe"
+      },
+      "id": "note-trigger",
+      "name": "Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        140,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 24
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "height": 320,
+        "width": 380,
+        "content": "## 📝 GÉNÉRATION DE SCRIPT IA\n\n**Ce qu'il fait :**\nUtilise OpenAI GPT-4 pour générer un script viral divisé en 8 parties\n\n**API Requise :** OpenAI\n**Lien :** https://platform.openai.com/api-keys\n\n**Format de sortie :**\n```json\n{\n  \"avatar_description\": \"Coach professionnel souriant\",\n  \"parts\": [\n    {\"part\": 1, \"duration\": 8, \"text\": \"Script partie 1\"},\n    {\"part\": 2, \"duration\": 8, \"text\": \"Script partie 2\"},\n    ...\n  ]\n}\n```\n\n**Personnalisation :**\nModifiez le prompt pour changer le style :\n- Humoristique, éducatif, motivationnel\n- Ton : casual, professionnel, énergique"
+      },
+      "id": "note-script-generation",
+      "name": "Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        360,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "content": "=Génère un script vidéo viral pour {{ $json.topic }} divisé en 8 parties de 8 secondes chacune. Chaque partie doit être engageante et se terminer par un hook pour la partie suivante. Format JSON:\n{\n  \"avatar_description\": \"description détaillée de l'avatar à créer\",\n  \"parts\": [\n    {\"part\": 1, \"duration\": 8, \"text\": \"script partie 1\"},\n    {\"part\": 2, \"duration\": 8, \"text\": \"script partie 2\"},\n    ...\n  ]\n}",
+        "options": {}
+      },
+      "id": "generate-script",
+      "name": "Generate Video Script",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        460,
+        380
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "openai-credentials",
+          "name": "OpenAI API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "height": 360,
+        "width": 380,
+        "content": "## 🎭 CRÉATION DE L'AVATAR INITIAL\n\n**Ce qu'il fait :**\nCrée le premier avatar IA avec D-ID qui servira de base\n\n**API Requise :** D-ID\n**Lien :** https://studio.d-id.com/account-settings\n**Doc API :** https://docs.d-id.com/reference/api-overview\n\n**Credentials n8n :**\n- Type : Header Auth\n- Header Name : `Authorization`\n- Header Value : `Basic VOTRE_API_KEY`\n\n**Paramètres :**\n- `source_url` : URL de l'image de l'avatar\n- `script` : Texte de la première partie\n- `config.stitch` : Active le stitching automatique\n- `config.result_format` : Format MP4\n\n**Coût :** ~1 crédit D-ID par génération\n\n**Alternative :** HeyGen, Synthesia"
+      },
+      "id": "note-create-avatar",
+      "name": "Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        580,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.d-id.com/talks",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "source_url",
+              "value": "={{ $json.avatar_image_url }}"
+            },
+            {
+              "name": "script",
+              "value": "={{ $json.parts[0].text }}"
+            },
+            {
+              "name": "config",
+              "value": "={\"stitch\": true, \"result_format\": \"mp4\"}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "create-avatar",
+      "name": "Create AI Avatar",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        680,
+        380
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "did-api-key",
+          "name": "D-ID API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "height": 240,
+        "width": 380,
+        "content": "## 💾 STOCKAGE DES VARIABLES\n\n**Ce qu'il fait :**\nStocke les données importantes pour les réutiliser\n\n**Variables sauvegardées :**\n- `videoParts` : Les 8 parties du script\n- `avatarUrl` : URL de l'avatar créé\n- `topic` : Le sujet de la vidéo\n\n**Pourquoi c'est important :**\nPermet de réutiliser ces données dans les nœuds suivants sans avoir à rechercher dans les nœuds précédents\n\n**Utilisation :**\nAccès via `$('Set Variables').item.json.avatarUrl`"
+      },
+      "id": "note-set-variables",
+      "name": "Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        800,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "video-parts",
+              "name": "videoParts",
+              "value": "={{ $json.parts }}",
+              "type": "array"
+            },
+            {
+              "id": "avatar-url",
+              "name": "avatarUrl",
+              "value": "={{ $json.result_url }}",
+              "type": "string"
+            },
+            {
+              "id": "topic",
+              "name": "topic",
+              "value": "={{ $('Schedule Trigger').item.json.topic || 'Motivation quotidienne' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-variables",
+      "name": "Set Variables",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        900,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "height": 520,
+        "width": 1360,
+        "content": "## 🔄 BOUCLE DE GÉNÉRATION DES 8 VIDÉOS\n\n**Ce bloc génère 8 vidéos de 8 secondes chacune**\n\n### 📊 Flux de travail :\n\n1️⃣ **Split Into Parts** : Divise les 8 parties en items individuels\n2️⃣ **Generate Video Part** : Crée une vidéo pour chaque partie avec D-ID\n3️⃣ **Wait for Processing** : Attend 30s que D-ID traite la vidéo\n4️⃣ **Check Video Status** : Vérifie si la vidéo est prête\n5️⃣ **Download Video Part** : Télécharge la vidéo générée\n6️⃣ **Add to File List** : Ajoute le nom du fichier à la liste de compilation\n7️⃣ **All Parts Done?** : Vérifie si toutes les 8 vidéos sont générées\n   - ❌ **Non** → Retour à l'étape 1 pour la partie suivante\n   - ✅ **Oui** → Passe à la compilation\n\n### ⏱️ Temps total : ~4-5 minutes (8 vidéos x 30-40s)\n\n### 💡 Astuce : \nSi vous voulez modifier le nombre de parties, changez le nombre dans le script de génération ET ajustez la boucle"
+      },
+      "id": "note-video-loop",
+      "name": "Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1020,
+        -120
+      ]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "id": "split-parts",
+      "name": "Split Into Parts",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1120,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.d-id.com/talks",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "source_url",
+              "value": "={{ $('Set Variables').item.json.avatarUrl }}"
+            },
+            {
+              "name": "script",
+              "value": "={{ $json.text }}"
+            },
+            {
+              "name": "config",
+              "value": "={\"stitch\": true, \"result_format\": \"mp4\", \"driver_expressions\": {\"expressions\": [{\"expression\": \"happy\", \"start_frame\": 0, \"intensity\": 1.0}]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "generate-video-part",
+      "name": "Generate Video Part",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1340,
+        380
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "did-api-key",
+          "name": "D-ID API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 30,
+        "unit": "seconds"
+      },
+      "id": "wait-processing",
+      "name": "Wait for Processing",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1560,
+        380
+      ],
+      "webhookId": "video-processing-wait"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.d-id.com/talks/{{ $json.id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "check-video-status",
+      "name": "Check Video Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1780,
+        380
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "did-api-key",
+          "name": "D-ID API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.result_url }}",
+        "options": {
+          "fileName": "=video_part_{{ $('Split Into Parts').context.currentRunIndex + 1 }}.mp4"
+        }
+      },
+      "id": "download-video",
+      "name": "Download Video Part",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2000,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "command": "=cd /tmp/n8n-videos && echo \"file 'video_part_{{ $('Split Into Parts').context.currentRunIndex + 1 }}.mp4'\" >> filelist.txt"
+      },
+      "id": "add-to-filelist",
+      "name": "Add to File List",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        2220,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "check-more-parts",
+              "leftValue": "={{ $('Split Into Parts').context.noItemsLeft }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-all-done",
+      "name": "All Parts Done?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2440,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "height": 280,
+        "width": 380,
+        "content": "## 🎞️ COMPILATION AVEC FFMPEG\n\n**Ce qu'il fait :**\nAssemble les 8 vidéos en une seule vidéo de 64 secondes\n\n**Prérequis :**\n✅ FFmpeg doit être installé sur le serveur\n```bash\nsudo apt-get install ffmpeg\n```\n\n**Commande exécutée :**\n```bash\nffmpeg -f concat -safe 0 \\\n  -i filelist.txt \\\n  -c copy \\\n  final_video.mp4\n```\n\n**Durée :** ~10 secondes\n**Format de sortie :** MP4, optimisé pour les réseaux sociaux\n\n**Fichier créé :** /tmp/n8n-videos/final_video.mp4"
+      },
+      "id": "note-compilation",
+      "name": "Note5",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2560,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "command": "cd /tmp/n8n-videos && ffmpeg -f concat -safe 0 -i filelist.txt -c copy final_video.mp4"
+      },
+      "id": "compile-videos",
+      "name": "Compile Videos with FFmpeg",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        2660,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "height": 560,
+        "width": 620,
+        "content": "## 📱 PUBLICATION MULTI-PLATEFORMES\n\n**Ce bloc publie automatiquement sur 3 plateformes en parallèle**\n\n---\n\n### 🎥 YOUTUBE\n**API :** YouTube Data API v3\n**Lien :** https://console.cloud.google.com/apis/library/youtube.googleapis.com\n\n**Configuration :**\n1. Créer un projet Google Cloud\n2. Activer YouTube Data API v3\n3. Créer des credentials OAuth 2.0\n4. Configurer dans n8n\n\n**Format :** Shorts (9:16) ou Standard (16:9)\n**Visibilité :** Public, Unlisted ou Private\n\n---\n\n### 📸 INSTAGRAM REELS\n**API :** Instagram Graph API\n**Lien :** https://developers.facebook.com/docs/instagram-api\n\n**Configuration :**\n1. Créer une app Facebook\n2. Ajouter Instagram Graph API\n3. Obtenir un User Access Token\n4. Lier votre compte Instagram professionnel\n\n**Format :** Vertical 9:16, 15-90 secondes\n**Limite :** 25 publications/jour\n\n---\n\n### 🎵 TIKTOK\n**API :** TikTok for Developers\n**Lien :** https://developers.tiktok.com/\n\n**Configuration :**\n1. S'inscrire sur TikTok for Developers\n2. Créer une application\n3. Obtenir Client Key et Client Secret\n4. Générer Access Token via OAuth 2.0\n\n**Format :** Vertical 9:16, jusqu'à 10 minutes\n**Limite :** Selon le plan API"
+      },
+      "id": "note-publication",
+      "name": "Note6",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2780,
+        -320
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "binaryPropertyName": "data",
+        "options": {
+          "title": "={{ $('Set Variables').item.json.topic }}",
+          "description": "Vidéo générée automatiquement #IA #Avatar #Motivation",
+          "categoryId": "22",
+          "privacyStatus": "public"
+        }
+      },
+      "id": "upload-youtube",
+      "name": "Upload to YouTube",
+      "type": "n8n-nodes-base.youtube",
+      "typeVersion": 1,
+      "position": [
+        2880,
+        180
+      ],
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "youtube-oauth",
+          "name": "YouTube OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v18.0/me/media",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "instagramApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "video_url",
+              "value": "={{ $json.videoUrl }}"
+            },
+            {
+              "name": "caption",
+              "value": "={{ $('Set Variables').item.json.topic }} #IA #Avatar"
+            },
+            {
+              "name": "media_type",
+              "value": "REELS"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "upload-instagram",
+      "name": "Upload to Instagram",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2880,
+        280
+      ],
+      "credentials": {
+        "instagramApi": {
+          "id": "instagram-api",
+          "name": "Instagram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.tiktokapis.com/v2/post/publish/video/init/",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $credentials.token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "post_info",
+              "value": "={\"title\": \"{{ $('Set Variables').item.json.topic }}\", \"privacy_level\": \"PUBLIC_TO_EVERYONE\", \"disable_duet\": false, \"disable_comment\": false, \"disable_stitch\": false, \"video_cover_timestamp_ms\": 1000}"
+            },
+            {
+              "name": "source_info",
+              "value": "={\"source\": \"FILE_UPLOAD\", \"video_size\": {{ $json.videoSize }}, \"chunk_size\": 10000000, \"total_chunk_count\": 1}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "upload-tiktok",
+      "name": "Upload to TikTok",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2880,
+        380
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "tiktok-api",
+          "name": "TikTok API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "height": 220,
+        "width": 380,
+        "content": "## ✅ FINALISATION\n\n**Merge Upload Results :**\nCombine les résultats des 3 publications en un seul output\n\n**Cleanup Temp Files :**\nNettoie le dossier temporaire pour libérer l'espace :\n- Supprime tous les fichiers MP4\n- Supprime le fichier filelist.txt\n- Recrée le dossier vide pour la prochaine exécution\n\n**Important :** \nSi vous voulez conserver les vidéos, désactivez le nœud Cleanup"
+      },
+      "id": "note-cleanup",
+      "name": "Note7",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        3000,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "mergeByPosition",
+        "options": {}
+      },
+      "id": "merge-results",
+      "name": "Merge Upload Results",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        3100,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "command": "rm -rf /tmp/n8n-videos && mkdir -p /tmp/n8n-videos"
+      },
+      "id": "cleanup",
+      "name": "Cleanup Temp Files",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        3320,
+        280
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Generate Video Script",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Video Script": {
+      "main": [
+        [
+          {
+            "node": "Create AI Avatar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create AI Avatar": {
+      "main": [
+        [
+          {
+            "node": "Set Variables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Variables": {
+      "main": [
+        [
+          {
+            "node": "Split Into Parts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Into Parts": {
+      "main": [
+        [
+          {
+            "node": "Generate Video Part",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Video Part": {
+      "main": [
+        [
+          {
+            "node": "Wait for Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Processing": {
+      "main": [
+        [
+          {
+            "node": "Check Video Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Video Status": {
+      "main": [
+        [
+          {
+            "node": "Download Video Part",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Video Part": {
+      "main": [
+        [
+          {
+            "node": "Add to File List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add to File List": {
+      "main": [
+        [
+          {
+            "node": "All Parts Done?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "All Parts Done?": {
+      "main": [
+        [
+          {
+            "node": "Compile Videos with FFmpeg",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Split Into Parts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compile Videos with FFmpeg": {
+      "main": [
+        [
+          {
+            "node": "Upload to YouTube",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Upload to Instagram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Upload to TikTok",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload to YouTube": {
+      "main": [
+        [
+          {
+            "node": "Merge Upload Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload to Instagram": {
+      "main": [
+        [
+          {
+            "node": "Merge Upload Results",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Upload to TikTok": {
+      "main": [
+        [
+          {
+            "node": "Merge Upload Results",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Merge Upload Results": {
+      "main": [
+        [
+          {
+            "node": "Cleanup Temp Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "instanceId": "n8n-avatar-automation"
+  },
+  "id": "avatar-video-automation",
+  "tags": []
+}
+```
+
+</details>
+
+### ✅ Ce Que Contient le Workflow
+
+- **16 nœuds fonctionnels** (Schedule, Generate Script, Create Avatar, etc.)
+- **8 notes explicatives** avec tous les détails
+- **Tous les liens API** directement dans les notes
+- **Instructions de configuration** pour chaque étape
+- **Prêt à l'emploi** après configuration des credentials
+
 ## 📝 Configuration n8n
 
 ### Importer le Workflow
