@@ -1,0 +1,53 @@
+{
+  "name": "n8n-avatar-video-automation",
+  "version": "1.0.0",
+  "description": "Automatisation n8n pour générer des avatars IA et créer des vidéos compilées pour TikTok, Instagram et YouTube",
+  "main": "scripts/compile_videos.js",
+  "scripts": {
+    "compile": "node scripts/compile_videos.js",
+    "compile:tiktok": "node scripts/compile_videos.js /tmp/n8n-videos /tmp/final_tiktok.mp4 --platform tiktok",
+    "compile:instagram": "node scripts/compile_videos.js /tmp/n8n-videos /tmp/final_instagram.mp4 --platform instagram",
+    "compile:youtube": "node scripts/compile_videos.js /tmp/n8n-videos /tmp/final_youtube.mp4 --platform youtube_shorts",
+    "test": "echo \"Tests à implémenter\" && exit 0",
+    "cleanup": "rm -rf /tmp/n8n-videos && mkdir -p /tmp/n8n-videos"
+  },
+  "keywords": [
+    "n8n",
+    "automation",
+    "ai",
+    "avatar",
+    "video",
+    "tiktok",
+    "instagram",
+    "youtube",
+    "ffmpeg",
+    "d-id",
+    "content-creation"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/n8n-avatar-video-automation"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/n8n-avatar-video-automation/issues"
+  },
+  "homepage": "https://github.com/yourusername/n8n-avatar-video-automation#readme",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.1",
+    "form-data": "^4.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.54.0",
+    "prettier": "^3.1.0"
+  },
+  "optionalDependencies": {
+    "fluent-ffmpeg": "^2.1.2"
+  }
+}

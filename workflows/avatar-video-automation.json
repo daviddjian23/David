@@ -1,0 +1,653 @@
+{
+  "name": "Avatar Video Automation - TikTok/Instagram/YouTube",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 24
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "content": "=Génère un script vidéo viral pour {{ $json.topic }} divisé en 8 parties de 8 secondes chacune. Chaque partie doit être engageante et se terminer par un hook pour la partie suivante. Format JSON:\n{\n  \"avatar_description\": \"description détaillée de l'avatar à créer\",\n  \"parts\": [\n    {\"part\": 1, \"duration\": 8, \"text\": \"script partie 1\"},\n    {\"part\": 2, \"duration\": 8, \"text\": \"script partie 2\"},\n    ...\n  ]\n}",
+        "options": {}
+      },
+      "id": "generate-script",
+      "name": "Generate Video Script",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        460,
+        300
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "openai-credentials",
+          "name": "OpenAI API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.d-id.com/talks",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "source_url",
+              "value": "={{ $json.avatar_image_url }}"
+            },
+            {
+              "name": "script",
+              "value": "={{ $json.parts[0].text }}"
+            },
+            {
+              "name": "config",
+              "value": "={\"stitch\": true, \"result_format\": \"mp4\"}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "create-avatar",
+      "name": "Create AI Avatar",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        680,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "did-api-key",
+          "name": "D-ID API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "video-parts",
+              "name": "videoParts",
+              "value": "={{ $json.parts }}",
+              "type": "array"
+            },
+            {
+              "id": "avatar-url",
+              "name": "avatarUrl",
+              "value": "={{ $json.result_url }}",
+              "type": "string"
+            },
+            {
+              "id": "topic",
+              "name": "topic",
+              "value": "={{ $('Schedule Trigger').item.json.topic || 'Motivation quotidienne' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-variables",
+      "name": "Set Variables",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "id": "split-parts",
+      "name": "Split Into Parts",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.d-id.com/talks",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "source_url",
+              "value": "={{ $('Set Variables').item.json.avatarUrl }}"
+            },
+            {
+              "name": "script",
+              "value": "={{ $json.text }}"
+            },
+            {
+              "name": "config",
+              "value": "={\"stitch\": true, \"result_format\": \"mp4\", \"driver_expressions\": {\"expressions\": [{\"expression\": \"happy\", \"start_frame\": 0, \"intensity\": 1.0}]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "generate-video-part",
+      "name": "Generate Video Part",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1340,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "did-api-key",
+          "name": "D-ID API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 30,
+        "unit": "seconds"
+      },
+      "id": "wait-processing",
+      "name": "Wait for Processing",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1560,
+        300
+      ],
+      "webhookId": "video-processing-wait"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.d-id.com/talks/{{ $json.id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "check-video-status",
+      "name": "Check Video Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1780,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "did-api-key",
+          "name": "D-ID API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.result_url }}",
+        "options": {
+          "fileName": "=video_part_{{ $('Split Into Parts').context.currentRunIndex + 1 }}.mp4"
+        }
+      },
+      "id": "download-video",
+      "name": "Download Video Part",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "command": "=cd /tmp/n8n-videos && echo \"file 'video_part_{{ $('Split Into Parts').context.currentRunIndex + 1 }}.mp4'\" >> filelist.txt"
+      },
+      "id": "add-to-filelist",
+      "name": "Add to File List",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        2220,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "check-more-parts",
+              "leftValue": "={{ $('Split Into Parts').context.noItemsLeft }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-all-done",
+      "name": "All Parts Done?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2440,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "command": "cd /tmp/n8n-videos && ffmpeg -f concat -safe 0 -i filelist.txt -c copy final_video.mp4"
+      },
+      "id": "compile-videos",
+      "name": "Compile Videos with FFmpeg",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        2660,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "binaryPropertyName": "data",
+        "options": {
+          "title": "={{ $('Set Variables').item.json.topic }}",
+          "description": "Vidéo générée automatiquement #IA #Avatar #Motivation",
+          "categoryId": "22",
+          "privacyStatus": "public"
+        }
+      },
+      "id": "upload-youtube",
+      "name": "Upload to YouTube",
+      "type": "n8n-nodes-base.youtube",
+      "typeVersion": 1,
+      "position": [
+        2880,
+        100
+      ],
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "youtube-oauth",
+          "name": "YouTube OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v18.0/me/media",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "instagramApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "video_url",
+              "value": "={{ $json.videoUrl }}"
+            },
+            {
+              "name": "caption",
+              "value": "={{ $('Set Variables').item.json.topic }} #IA #Avatar"
+            },
+            {
+              "name": "media_type",
+              "value": "REELS"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "upload-instagram",
+      "name": "Upload to Instagram",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2880,
+        200
+      ],
+      "credentials": {
+        "instagramApi": {
+          "id": "instagram-api",
+          "name": "Instagram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.tiktokapis.com/v2/post/publish/video/init/",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $credentials.token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "post_info",
+              "value": "={\"title\": \"{{ $('Set Variables').item.json.topic }}\", \"privacy_level\": \"PUBLIC_TO_EVERYONE\", \"disable_duet\": false, \"disable_comment\": false, \"disable_stitch\": false, \"video_cover_timestamp_ms\": 1000}"
+            },
+            {
+              "name": "source_info",
+              "value": "={\"source\": \"FILE_UPLOAD\", \"video_size\": {{ $json.videoSize }}, \"chunk_size\": 10000000, \"total_chunk_count\": 1}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "upload-tiktok",
+      "name": "Upload to TikTok",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2880,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "tiktok-api",
+          "name": "TikTok API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "mergeByPosition",
+        "options": {}
+      },
+      "id": "merge-results",
+      "name": "Merge Upload Results",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        3100,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "command": "rm -rf /tmp/n8n-videos && mkdir -p /tmp/n8n-videos"
+      },
+      "id": "cleanup",
+      "name": "Cleanup Temp Files",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        3320,
+        200
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Generate Video Script",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Video Script": {
+      "main": [
+        [
+          {
+            "node": "Create AI Avatar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create AI Avatar": {
+      "main": [
+        [
+          {
+            "node": "Set Variables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Variables": {
+      "main": [
+        [
+          {
+            "node": "Split Into Parts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Into Parts": {
+      "main": [
+        [
+          {
+            "node": "Generate Video Part",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Video Part": {
+      "main": [
+        [
+          {
+            "node": "Wait for Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Processing": {
+      "main": [
+        [
+          {
+            "node": "Check Video Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Video Status": {
+      "main": [
+        [
+          {
+            "node": "Download Video Part",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Video Part": {
+      "main": [
+        [
+          {
+            "node": "Add to File List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add to File List": {
+      "main": [
+        [
+          {
+            "node": "All Parts Done?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "All Parts Done?": {
+      "main": [
+        [
+          {
+            "node": "Compile Videos with FFmpeg",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Split Into Parts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compile Videos with FFmpeg": {
+      "main": [
+        [
+          {
+            "node": "Upload to YouTube",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Upload to Instagram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Upload to TikTok",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload to YouTube": {
+      "main": [
+        [
+          {
+            "node": "Merge Upload Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload to Instagram": {
+      "main": [
+        [
+          {
+            "node": "Merge Upload Results",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Upload to TikTok": {
+      "main": [
+        [
+          {
+            "node": "Merge Upload Results",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Merge Upload Results": {
+      "main": [
+        [
+          {
+            "node": "Cleanup Temp Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "instanceId": "n8n-avatar-automation"
+  },
+  "id": "avatar-video-automation",
+  "tags": []
+}

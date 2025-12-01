@@ -1,0 +1,137 @@
+{
+  "video": {
+    "parts": {
+      "count": 8,
+      "duration": 8
+    },
+    "quality": {
+      "bitrate": "3000k",
+      "fps": 30,
+      "codec": "libx264",
+      "preset": "medium"
+    },
+    "format": {
+      "output": "mp4",
+      "size": "1080:1920"
+    }
+  },
+  "platforms": {
+    "tiktok": {
+      "enabled": true,
+      "format": "9:16",
+      "maxDuration": 600,
+      "maxSize": 287600000,
+      "bitrate": "3000k",
+      "hashtags": ["#IA", "#Avatar", "#TikTok"]
+    },
+    "instagram": {
+      "enabled": true,
+      "format": "9:16",
+      "maxDuration": 90,
+      "maxSize": 4000000000,
+      "bitrate": "3500k",
+      "hashtags": ["#IA", "#Avatar", "#Reels"]
+    },
+    "youtube": {
+      "enabled": true,
+      "format": "9:16",
+      "maxDuration": 60,
+      "maxSize": 256000000000,
+      "bitrate": "5000k",
+      "hashtags": ["#IA", "#Avatar", "#Shorts"]
+    }
+  },
+  "avatar": {
+    "provider": "d-id",
+    "defaultExpression": "happy",
+    "expressionIntensity": 1.0,
+    "voice": {
+      "language": "fr-FR",
+      "gender": "male",
+      "speed": 1.0
+    }
+  },
+  "content": {
+    "scriptGenerator": "openai",
+    "model": "gpt-4",
+    "defaultTopic": "Motivation quotidienne",
+    "style": "motivationnel",
+    "tone": "énergique",
+    "targetAudience": "adultes",
+    "language": "fr"
+  },
+  "automation": {
+    "schedule": {
+      "enabled": false,
+      "cron": "0 9 * * *",
+      "timezone": "Europe/Paris"
+    },
+    "autoPublish": true,
+    "retryAttempts": 3,
+    "retryDelay": 5000
+  },
+  "storage": {
+    "type": "local",
+    "tempDir": "/tmp/n8n-videos",
+    "outputDir": "./output",
+    "keepTempFiles": false,
+    "autoCleanupDays": 7
+  },
+  "watermark": {
+    "enabled": false,
+    "text": "@VotreChannel",
+    "position": "bottom-right",
+    "fontSize": 24,
+    "color": "white",
+    "opacity": 0.7
+  },
+  "music": {
+    "enabled": false,
+    "defaultTrack": "",
+    "volume": 0.3,
+    "fadeIn": 2,
+    "fadeOut": 2
+  },
+  "subtitles": {
+    "enabled": false,
+    "service": "whisper",
+    "language": "fr",
+    "fontSize": 20,
+    "position": "bottom"
+  },
+  "intro": {
+    "enabled": false,
+    "videoPath": "",
+    "duration": 3
+  },
+  "outro": {
+    "enabled": false,
+    "videoPath": "",
+    "duration": 3
+  },
+  "notifications": {
+    "discord": {
+      "enabled": false,
+      "webhookUrl": ""
+    },
+    "slack": {
+      "enabled": false,
+      "webhookUrl": ""
+    },
+    "email": {
+      "enabled": false,
+      "to": "",
+      "from": ""
+    }
+  },
+  "limits": {
+    "maxVideosPerDay": 10,
+    "minDelayBetweenGenerations": 30,
+    "videoGenerationTimeout": 300
+  },
+  "debug": {
+    "enabled": false,
+    "verbose": false,
+    "logLevel": "info"
+  }
+}
