@@ -3,6 +3,36 @@
   "nodes": [
     {
       "parameters": {
+        "height": 680,
+        "width": 800,
+        "content": "# 🎬 AUTOMATISATION VIDÉO AVEC AVATAR IA\n\n## 📋 DESCRIPTION DU WORKFLOW\nCe workflow automatise complètement la création de vidéos avec avatar IA :\n\n✅ **Génère un script viral** divisé en 8 parties de 8 secondes\n✅ **Crée un avatar IA** réaliste avec D-ID\n✅ **Génère 8 vidéos** de 8 secondes chacune (64s total)\n✅ **Compile automatiquement** toutes les vidéos en un seul fichier\n✅ **Publie simultanément** sur TikTok, Instagram et YouTube\n\n---\n\n## 🔑 API NÉCESSAIRES (OBLIGATOIRES)\n\n### 1️⃣ D-ID API (Génération d'avatars vidéo)\n**Pourquoi :** Crée des avatars IA qui parlent\n**Lien :** https://www.d-id.com/\n**Tarif :** Gratuit (20 crédits/mois) ou Payant ($5.9+/mois)\n**Inscription :** Créer un compte → Settings → API Keys\n\n### 2️⃣ OpenAI API (Génération de scripts)\n**Pourquoi :** Génère les scripts vidéo viraux\n**Lien :** https://platform.openai.com/\n**Tarif :** Pay-as-you-go (~$0.01-0.03 par script)\n**Inscription :** Créer un compte → API Keys → Create new key\n\n---\n\n## 📱 API RÉSEAUX SOCIAUX (OPTIONNELLES)\n\n### 3️⃣ TikTok for Developers\n**Lien :** https://developers.tiktok.com/\n**Inscription :** Créer une app → OAuth 2.0 → Obtenir access token\n\n### 4️⃣ Instagram Graph API\n**Lien :** https://developers.facebook.com/\n**Inscription :** Créer une app Facebook → Activer Instagram API\n\n### 5️⃣ YouTube Data API v3\n**Lien :** https://console.cloud.google.com/\n**Inscription :** Créer un projet → Activer YouTube API → OAuth 2.0\n\n---\n\n## ⚙️ CONFIGURATION REQUISE\n\n✔️ **FFmpeg** installé sur le serveur\n✔️ **Dossier temporaire** : /tmp/n8n-videos\n✔️ **Credentials** configurés dans n8n\n\n---\n\n## 🚀 DÉMARRAGE RAPIDE\n\n1. Configurer toutes les credentials dans n8n\n2. Modifier le sujet dans \"Schedule Trigger\"\n3. Cliquer sur \"Execute Workflow\"\n4. Attendre ~5-8 minutes\n5. Les vidéos seront publiées automatiquement !\n\n---\n\n## 💰 COÛT ESTIMÉ PAR VIDÉO\n\n- D-ID : ~$0.30-0.50 (8 générations)\n- OpenAI : ~$0.02-0.03 (script)\n- **Total : ~$0.35 par vidéo complète**\n\n---\n\n## ⏱️ TEMPS DE GÉNÉRATION\n\n- Script : ~10 secondes\n- Avatar initial : ~30 secondes\n- 8 vidéos : ~4-5 minutes\n- Compilation : ~10 secondes\n- Publication : ~30 secondes\n**Total : ~6-8 minutes par vidéo**"
+      },
+      "id": "main-info-note",
+      "name": "Note - Info Principale",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        -300
+      ]
+    },
+    {
+      "parameters": {
+        "height": 280,
+        "width": 380,
+        "content": "## 🎯 DÉCLENCHEUR\n\n**Ce qu'il fait :**\nDémarre le workflow automatiquement toutes les 24h\n\n**Configuration :**\n- Interval : 24 heures\n- Vous pouvez aussi le déclencher manuellement\n\n**Personnalisation :**\nAjoutez un input JSON pour personnaliser :\n```json\n{\n  \"topic\": \"5 astuces productivité\",\n  \"style\": \"éducatif\",\n  \"tone\": \"énergique\"\n}\n```\n\n**Alternative :**\nRemplacez par un Webhook pour déclencher depuis une API externe"
+      },
+      "id": "note-trigger",
+      "name": "Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        140,
+        80
+      ]
+    },
+    {
+      "parameters": {
         "rule": {
           "interval": [
             {
@@ -18,7 +48,22 @@
       "typeVersion": 1.1,
       "position": [
         240,
-        300
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "height": 320,
+        "width": 380,
+        "content": "## 📝 GÉNÉRATION DE SCRIPT IA\n\n**Ce qu'il fait :**\nUtilise OpenAI GPT-4 pour générer un script viral divisé en 8 parties\n\n**API Requise :** OpenAI\n**Lien :** https://platform.openai.com/api-keys\n\n**Format de sortie :**\n```json\n{\n  \"avatar_description\": \"Coach professionnel souriant\",\n  \"parts\": [\n    {\"part\": 1, \"duration\": 8, \"text\": \"Script partie 1\"},\n    {\"part\": 2, \"duration\": 8, \"text\": \"Script partie 2\"},\n    ...\n  ]\n}\n```\n\n**Personnalisation :**\nModifiez le prompt pour changer le style :\n- Humoristique, éducatif, motivationnel\n- Ton : casual, professionnel, énergique"
+      },
+      "id": "note-script-generation",
+      "name": "Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        360,
+        80
       ]
     },
     {
@@ -32,7 +77,7 @@
       "typeVersion": 1.6,
       "position": [
         460,
-        300
+        380
       ],
       "credentials": {
         "openAiApi": {
@@ -40,6 +85,21 @@
           "name": "OpenAI API"
         }
       }
+    },
+    {
+      "parameters": {
+        "height": 360,
+        "width": 380,
+        "content": "## 🎭 CRÉATION DE L'AVATAR INITIAL\n\n**Ce qu'il fait :**\nCrée le premier avatar IA avec D-ID qui servira de base\n\n**API Requise :** D-ID\n**Lien :** https://studio.d-id.com/account-settings\n**Doc API :** https://docs.d-id.com/reference/api-overview\n\n**Credentials n8n :**\n- Type : Header Auth\n- Header Name : `Authorization`\n- Header Value : `Basic VOTRE_API_KEY`\n\n**Paramètres :**\n- `source_url` : URL de l'image de l'avatar\n- `script` : Texte de la première partie\n- `config.stitch` : Active le stitching automatique\n- `config.result_format` : Format MP4\n\n**Coût :** ~1 crédit D-ID par génération\n\n**Alternative :** HeyGen, Synthesia"
+      },
+      "id": "note-create-avatar",
+      "name": "Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        580,
+        80
+      ]
     },
     {
       "parameters": {
@@ -81,7 +141,7 @@
       "typeVersion": 4.2,
       "position": [
         680,
-        300
+        380
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -89,6 +149,21 @@
           "name": "D-ID API Key"
         }
       }
+    },
+    {
+      "parameters": {
+        "height": 240,
+        "width": 380,
+        "content": "## 💾 STOCKAGE DES VARIABLES\n\n**Ce qu'il fait :**\nStocke les données importantes pour les réutiliser\n\n**Variables sauvegardées :**\n- `videoParts` : Les 8 parties du script\n- `avatarUrl` : URL de l'avatar créé\n- `topic` : Le sujet de la vidéo\n\n**Pourquoi c'est important :**\nPermet de réutiliser ces données dans les nœuds suivants sans avoir à rechercher dans les nœuds précédents\n\n**Utilisation :**\nAccès via `$('Set Variables').item.json.avatarUrl`"
+      },
+      "id": "note-set-variables",
+      "name": "Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        800,
+        80
+      ]
     },
     {
       "parameters": {
@@ -122,7 +197,22 @@
       "typeVersion": 3.3,
       "position": [
         900,
-        300
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "height": 520,
+        "width": 1360,
+        "content": "## 🔄 BOUCLE DE GÉNÉRATION DES 8 VIDÉOS\n\n**Ce bloc génère 8 vidéos de 8 secondes chacune**\n\n### 📊 Flux de travail :\n\n1️⃣ **Split Into Parts** : Divise les 8 parties en items individuels\n2️⃣ **Generate Video Part** : Crée une vidéo pour chaque partie avec D-ID\n3️⃣ **Wait for Processing** : Attend 30s que D-ID traite la vidéo\n4️⃣ **Check Video Status** : Vérifie si la vidéo est prête\n5️⃣ **Download Video Part** : Télécharge la vidéo générée\n6️⃣ **Add to File List** : Ajoute le nom du fichier à la liste de compilation\n7️⃣ **All Parts Done?** : Vérifie si toutes les 8 vidéos sont générées\n   - ❌ **Non** → Retour à l'étape 1 pour la partie suivante\n   - ✅ **Oui** → Passe à la compilation\n\n### ⏱️ Temps total : ~4-5 minutes (8 vidéos x 30-40s)\n\n### 💡 Astuce : \nSi vous voulez modifier le nombre de parties, changez le nombre dans le script de génération ET ajustez la boucle"
+      },
+      "id": "note-video-loop",
+      "name": "Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1020,
+        -120
       ]
     },
     {
@@ -136,7 +226,7 @@
       "typeVersion": 3,
       "position": [
         1120,
-        300
+        380
       ]
     },
     {
@@ -179,7 +269,7 @@
       "typeVersion": 4.2,
       "position": [
         1340,
-        300
+        380
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -199,7 +289,7 @@
       "typeVersion": 1.1,
       "position": [
         1560,
-        300
+        380
       ],
       "webhookId": "video-processing-wait"
     },
@@ -217,7 +307,7 @@
       "typeVersion": 4.2,
       "position": [
         1780,
-        300
+        380
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -239,7 +329,7 @@
       "typeVersion": 4.2,
       "position": [
         2000,
-        300
+        380
       ]
     },
     {
@@ -252,7 +342,7 @@
       "typeVersion": 1,
       "position": [
         2220,
-        300
+        380
       ]
     },
     {
@@ -284,7 +374,22 @@
       "typeVersion": 2,
       "position": [
         2440,
-        300
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "height": 280,
+        "width": 380,
+        "content": "## 🎞️ COMPILATION AVEC FFMPEG\n\n**Ce qu'il fait :**\nAssemble les 8 vidéos en une seule vidéo de 64 secondes\n\n**Prérequis :**\n✅ FFmpeg doit être installé sur le serveur\n```bash\nsudo apt-get install ffmpeg\n```\n\n**Commande exécutée :**\n```bash\nffmpeg -f concat -safe 0 \\\n  -i filelist.txt \\\n  -c copy \\\n  final_video.mp4\n```\n\n**Durée :** ~10 secondes\n**Format de sortie :** MP4, optimisé pour les réseaux sociaux\n\n**Fichier créé :** /tmp/n8n-videos/final_video.mp4"
+      },
+      "id": "note-compilation",
+      "name": "Note5",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2560,
+        -80
       ]
     },
     {
@@ -297,7 +402,22 @@
       "typeVersion": 1,
       "position": [
         2660,
-        200
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "height": 560,
+        "width": 620,
+        "content": "## 📱 PUBLICATION MULTI-PLATEFORMES\n\n**Ce bloc publie automatiquement sur 3 plateformes en parallèle**\n\n---\n\n### 🎥 YOUTUBE\n**API :** YouTube Data API v3\n**Lien :** https://console.cloud.google.com/apis/library/youtube.googleapis.com\n\n**Configuration :**\n1. Créer un projet Google Cloud\n2. Activer YouTube Data API v3\n3. Créer des credentials OAuth 2.0\n4. Configurer dans n8n\n\n**Format :** Shorts (9:16) ou Standard (16:9)\n**Visibilité :** Public, Unlisted ou Private\n\n---\n\n### 📸 INSTAGRAM REELS\n**API :** Instagram Graph API\n**Lien :** https://developers.facebook.com/docs/instagram-api\n\n**Configuration :**\n1. Créer une app Facebook\n2. Ajouter Instagram Graph API\n3. Obtenir un User Access Token\n4. Lier votre compte Instagram professionnel\n\n**Format :** Vertical 9:16, 15-90 secondes\n**Limite :** 25 publications/jour\n\n---\n\n### 🎵 TIKTOK\n**API :** TikTok for Developers\n**Lien :** https://developers.tiktok.com/\n\n**Configuration :**\n1. S'inscrire sur TikTok for Developers\n2. Créer une application\n3. Obtenir Client Key et Client Secret\n4. Générer Access Token via OAuth 2.0\n\n**Format :** Vertical 9:16, jusqu'à 10 minutes\n**Limite :** Selon le plan API"
+      },
+      "id": "note-publication",
+      "name": "Note6",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2780,
+        -320
       ]
     },
     {
@@ -317,7 +437,7 @@
       "typeVersion": 1,
       "position": [
         2880,
-        100
+        180
       ],
       "credentials": {
         "youTubeOAuth2Api": {
@@ -357,7 +477,7 @@
       "typeVersion": 4.2,
       "position": [
         2880,
-        200
+        280
       ],
       "credentials": {
         "instagramApi": {
@@ -406,7 +526,7 @@
       "typeVersion": 4.2,
       "position": [
         2880,
-        300
+        380
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -414,6 +534,21 @@
           "name": "TikTok API"
         }
       }
+    },
+    {
+      "parameters": {
+        "height": 220,
+        "width": 380,
+        "content": "## ✅ FINALISATION\n\n**Merge Upload Results :**\nCombine les résultats des 3 publications en un seul output\n\n**Cleanup Temp Files :**\nNettoie le dossier temporaire pour libérer l'espace :\n- Supprime tous les fichiers MP4\n- Supprime le fichier filelist.txt\n- Recrée le dossier vide pour la prochaine exécution\n\n**Important :** \nSi vous voulez conserver les vidéos, désactivez le nœud Cleanup"
+      },
+      "id": "note-cleanup",
+      "name": "Note7",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        3000,
+        -80
+      ]
     },
     {
       "parameters": {
@@ -427,7 +562,7 @@
       "typeVersion": 2.1,
       "position": [
         3100,
-        200
+        280
       ]
     },
     {
@@ -440,7 +575,7 @@
       "typeVersion": 1,
       "position": [
         3320,
-        200
+        280
       ]
     }
   ],
