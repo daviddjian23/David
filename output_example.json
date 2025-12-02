@@ -1,0 +1,230 @@
+{
+  "meta": {
+    "generated_at": "2025-12-02T11:27:08+01:00",
+    "today": "2025-12-02",
+    "total_homeworks": 5,
+    "total_estimated_minutes": 375,
+    "total_available_minutes": 720,
+    "weights_used": {
+      "w_proximity": 0.5,
+      "w_user_importance": 0.25,
+      "w_difficulty_and_duration": 0.2,
+      "keyword_bonus": 0.15
+    }
+  },
+  "homeworks": [
+    {
+      "id": "hw_1",
+      "title": "Contrôle de mathématiques chapitre 4",
+      "subject": "mathématiques",
+      "description": "Contrôle de mathématiques chapitre 4 : fonctions polynomiales et dérivées. Revoir tous les exercices...",
+      "due_date": "2025-12-04",
+      "estimated_minutes": 120,
+      "difficulty": "difficile",
+      "importance": 0.48,
+      "priority_score": 51,
+      "tags": [
+        "contrôle",
+        "chapitre 4",
+        "important"
+      ]
+    },
+    {
+      "id": "hw_5",
+      "title": "Apprendre vocabulaire anglais unité 5",
+      "subject": "anglais",
+      "description": "Apprendre vocabulaire anglais unité 5 : 30 mots sur le thème de l'environnement. Préparation pour in...",
+      "due_date": "2025-12-03",
+      "estimated_minutes": 60,
+      "difficulty": "facile",
+      "importance": 0.31,
+      "priority_score": 36,
+      "tags": [
+        "vocabulaire",
+        "oral"
+      ]
+    },
+    {
+      "id": "hw_4",
+      "title": "Exos Physique Forces",
+      "subject": "physique",
+      "description": "Exercices 12-18 page 89 : forces et mouvement",
+      "due_date": "2025-12-07",
+      "estimated_minutes": 75,
+      "difficulty": "difficile",
+      "importance": 0.23,
+      "priority_score": 23,
+      "tags": [
+        "exercices",
+        "difficile"
+      ]
+    },
+    {
+      "id": "hw_2",
+      "title": "DM Français - Commentaire Rimbaud",
+      "subject": "français",
+      "description": "Devoir maison de français : rédaction d'un commentaire composé sur le poème 'Le Dormeur du Val' de R...",
+      "due_date": "2025-12-06",
+      "estimated_minutes": 90,
+      "difficulty": "moyen",
+      "importance": 0.21,
+      "priority_score": 21,
+      "tags": [
+        "dm",
+        "rédaction"
+      ]
+    },
+    {
+      "id": "hw_3",
+      "title": "Lecture du chapitre 3 du",
+      "subject": "histoire",
+      "description": "Lecture du chapitre 3 du livre d'histoire sur la Révolution française. Prendre des notes sur les dat...",
+      "due_date": "2025-12-05",
+      "estimated_minutes": 30,
+      "difficulty": "facile",
+      "importance": 0.17,
+      "priority_score": 20,
+      "tags": [
+        "lecture",
+        "révision"
+      ]
+    }
+  ],
+  "schedule": [
+    {
+      "date": "2025-12-02",
+      "day_total_allocated_minutes": 40,
+      "available_minutes": 60,
+      "cartouche": {
+        "emoji": "🧮",
+        "color": "#DCE7FF",
+        "label": "Mathématiques"
+      },
+      "sessions": [
+        {
+          "homework_id": "hw_1",
+          "start_time": "17:00",
+          "duration_minutes": 40,
+          "short_task_desc": "Contrôle de mathématiques chap...",
+          "emoji": "🧮",
+          "color": "#DCE7FF"
+        }
+      ],
+      "daily_summary": "Aujourd'hui : 1 session(s) de travail (40 min) en mathématiques.",
+      "advice": [
+        "Charge équilibrée : reste concentré et tu termineras à temps.",
+        "Tâches difficiles prévues : commence par celles-ci quand tu es le plus frais.",
+        "Prépare ton espace de travail avant de commencer.",
+        "Éteins les distractions (téléphone, réseaux sociaux)."
+      ]
+    },
+    {
+      "date": "2025-12-03",
+      "day_total_allocated_minutes": 70,
+      "available_minutes": 120,
+      "cartouche": {
+        "emoji": "🧮",
+        "color": "#DCE7FF",
+        "label": "Mathématiques"
+      },
+      "sessions": [
+        {
+          "homework_id": "hw_1",
+          "start_time": "17:00",
+          "duration_minutes": 40,
+          "short_task_desc": "Contrôle de mathématiques chap...",
+          "emoji": "🧮",
+          "color": "#DCE7FF"
+        },
+        {
+          "homework_id": "hw_5",
+          "start_time": "17:00",
+          "duration_minutes": 30,
+          "short_task_desc": "Apprendre vocabulaire anglais ...",
+          "emoji": "🇬🇧",
+          "color": "#F0E5FF"
+        }
+      ],
+      "daily_summary": "Aujourd'hui : 2 session(s) de travail (70 min) en anglais, mathématiques.",
+      "advice": [
+        "Charge équilibrée : reste concentré et tu termineras à temps.",
+        "Tâches difficiles prévues : commence par celles-ci quand tu es le plus frais.",
+        "Prépare ton espace de travail avant de commencer.",
+        "Éteins les distractions (téléphone, réseaux sociaux)."
+      ]
+    },
+    {
+      "date": "2025-12-04",
+      "day_total_allocated_minutes": 40,
+      "available_minutes": 90,
+      "cartouche": {
+        "emoji": "🧮",
+        "color": "#DCE7FF",
+        "label": "Mathématiques"
+      },
+      "sessions": [
+        {
+          "homework_id": "hw_1",
+          "start_time": "17:00",
+          "duration_minutes": 40,
+          "short_task_desc": "Contrôle de mathématiques chap...",
+          "emoji": "🧮",
+          "color": "#DCE7FF"
+        }
+      ],
+      "daily_summary": "Aujourd'hui : 1 session(s) de travail (40 min) en mathématiques.",
+      "advice": [
+        "Charge équilibrée : reste concentré et tu termineras à temps.",
+        "Tâches difficiles prévues : commence par celles-ci quand tu es le plus frais.",
+        "Prépare ton espace de travail avant de commencer.",
+        "Éteins les distractions (téléphone, réseaux sociaux)."
+      ]
+    }
+  ],
+  "conflicts": [
+    {
+      "homework_id": "hw_5",
+      "reason": "Disponibilités insuffisantes",
+      "required_minutes": 60,
+      "available_before_due": 52,
+      "solutions": [
+        "Solution 1 : Augmenter la disponibilité journalière de 2 min sur 3 jours pour combler le manque.",
+        "Solution 2 : Réduire le périmètre du devoir en ciblant les exercices à forte valeur (environ 52 min suffiraient pour l'essentiel).",
+        "Solution 3 : Réorganiser d'autres sessions moins prioritaires pour libérer 8 minutes supplémentaires."
+      ]
+    },
+    {
+      "homework_id": "hw_4",
+      "reason": "Disponibilités insuffisantes",
+      "required_minutes": 75,
+      "available_before_due": 498,
+      "solutions": [
+        "Solution 1 : Augmenter la disponibilité journalière de -141 min sur 3 jours pour combler le manque.",
+        "Solution 2 : Réduire le périmètre du devoir en ciblant les exercices à forte valeur (environ 498 min suffiraient pour l'essentiel).",
+        "Solution 3 : Réorganiser d'autres sessions moins prioritaires pour libérer -423 minutes supplémentaires."
+      ]
+    },
+    {
+      "homework_id": "hw_2",
+      "reason": "Disponibilités insuffisantes",
+      "required_minutes": 90,
+      "available_before_due": 390,
+      "solutions": [
+        "Solution 1 : Augmenter la disponibilité journalière de -100 min sur 3 jours pour combler le manque.",
+        "Solution 2 : Réduire le périmètre du devoir en ciblant les exercices à forte valeur (environ 390 min suffiraient pour l'essentiel).",
+        "Solution 3 : Réorganiser d'autres sessions moins prioritaires pour libérer -300 minutes supplémentaires."
+      ]
+    },
+    {
+      "homework_id": "hw_3",
+      "reason": "Disponibilités insuffisantes",
+      "required_minutes": 30,
+      "available_before_due": 228,
+      "solutions": [
+        "Solution 1 : Augmenter la disponibilité journalière de -66 min sur 3 jours pour combler le manque.",
+        "Solution 2 : Réduire le périmètre du devoir en ciblant les exercices à forte valeur (environ 228 min suffiraient pour l'essentiel).",
+        "Solution 3 : Réorganiser d'autres sessions moins prioritaires pour libérer -198 minutes supplémentaires."
+      ]
+    }
+  ]
+}
