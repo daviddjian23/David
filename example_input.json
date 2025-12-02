@@ -1,0 +1,88 @@
+{
+  "today": "2025-12-02",
+  "user_id": "etudiant_1",
+  "max_session_minutes": 90,
+  "buffer_percent": 10,
+  "prefer_spread": true,
+  "availability": [
+    {"date": "2025-12-02", "available_minutes": 60},
+    {"date": "2025-12-03", "available_minutes": 120},
+    {"date": "2025-12-04", "available_minutes": 90},
+    {"date": "2025-12-05", "available_minutes": 150},
+    {"date": "2025-12-06", "available_minutes": 180},
+    {"date": "2025-12-07", "available_minutes": 120}
+  ],
+  "homeworks_raw": [
+    {
+      "id": "hw_1",
+      "raw_text": "Contrôle de mathématiques chapitre 4 : fonctions polynomiales et dérivées. Revoir tous les exercices du livre pages 45-62. Refaire les exercices types.",
+      "title": null,
+      "subject": null,
+      "description": null,
+      "due_date": "2025-12-04",
+      "estimated_minutes": null,
+      "difficulty": null,
+      "tags": ["contrôle", "chapitre 4", "important"]
+    },
+    {
+      "id": "hw_2",
+      "raw_text": "Devoir maison de français : rédaction d'un commentaire composé sur le poème 'Le Dormeur du Val' de Rimbaud. 2-3 pages manuscrites attendues.",
+      "title": "DM Français - Commentaire Rimbaud",
+      "subject": "français",
+      "description": null,
+      "due_date": "2025-12-06",
+      "estimated_minutes": 90,
+      "difficulty": "moyen",
+      "tags": ["dm", "rédaction"]
+    },
+    {
+      "id": "hw_3",
+      "raw_text": "Lecture du chapitre 3 du livre d'histoire sur la Révolution française. Prendre des notes sur les dates clés et les personnages importants.",
+      "title": null,
+      "subject": "histoire",
+      "description": null,
+      "due_date": "2025-12-05",
+      "estimated_minutes": null,
+      "difficulty": null,
+      "tags": ["lecture", "révision"]
+    },
+    {
+      "id": "hw_4",
+      "raw_text": "Exercices de physique sur les forces et le mouvement. Exercices 12 à 18 page 89. Difficile : inclut des problèmes de synthèse.",
+      "title": "Exos Physique Forces",
+      "subject": "physique",
+      "description": "Exercices 12-18 page 89 : forces et mouvement",
+      "due_date": "2025-12-07",
+      "estimated_minutes": 75,
+      "difficulty": "difficile",
+      "tags": ["exercices", "difficile"]
+    },
+    {
+      "id": "hw_5",
+      "raw_text": "Apprendre vocabulaire anglais unité 5 : 30 mots sur le thème de l'environnement. Préparation pour interrogation orale.",
+      "title": null,
+      "subject": "anglais",
+      "description": null,
+      "due_date": "2025-12-03",
+      "estimated_minutes": null,
+      "difficulty": "facile",
+      "tags": ["vocabulaire", "oral"]
+    }
+  ],
+  "weights": {
+    "w_proximity": 0.5,
+    "w_user_importance": 0.25,
+    "w_difficulty_and_duration": 0.2,
+    "keyword_bonus": 0.15
+  },
+  "session_preferences": {
+    "preferred_session_min": 25,
+    "preferred_session_max": 50,
+    "max_session_minutes": 90
+  },
+  "time_preferences": {
+    "earliest_hour": 17,
+    "latest_hour": 21,
+    "preferred_start_windows": [["17:00", "19:00"], ["19:30", "21:30"]]
+  }
+}
